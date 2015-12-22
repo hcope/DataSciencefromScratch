@@ -1,0 +1,20 @@
+#chapter 4 also addresses matrices and how they are used.
+#we assume that matrices are represented as lists of lists
+
+def shape(A):
+  numRows = len(A)
+  numCols = len(A[0]) if A else 0 #tbh I don't understand this line and am trying to figure it out
+  return numRows, numCols
+  
+def get_row(A, i):
+  """
+  Assumes that i is a valid row
+  """
+  return A[i]
+
+def get_col(A, j):
+  """
+  Assumes that j is a valid column
+  """
+  return [A_i[j] for A_i in A]
+
