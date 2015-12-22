@@ -39,3 +39,13 @@ def sum_of_squares(a):
     Dot product of a vector with itself
     Mainly a helper function for magnitude
     """
+    return dot_product(a, a)
+
+def vector_magnitude(a):
+    return math.sqrt(sum_of_squares(a))
+    
+def squared_distance(a, b):
+    return sum_of_squares(vector_subtract(a, b))
+    
+def distance(a, b)
+    return vector_magnitude(vector_subtract(a, b))
