@@ -1,0 +1,90 @@
+#working through chapter 5: statistics
+from __future__ import division
+import math
+import vectorTools
+
+#central tendancies
+
+def mean(x):
+    return sum(x) / len(x)
+  
+def median(y):
+    """
+    niave approact that takes at best O(n log n)
+    You can get an average preformance of O(n) with QuickSelect.
+    I'll learn more about that later: https://en.wikipedia.org/wiki/Quickselect
+    """
+    n = len(y)
+    sortedList = sorted(y)
+    midpoint = n/2
+    
+    if n%2 == 1:
+        return sortedList[midpoint]
+    
+    else:
+        bottom = midpoint - 1
+        return (sortedList[bottom] + sortedList[midpoint])/2
+
+def quantile(x, p):
+    """
+    A quantile is a generalization of the median. Represents the value that some percentage of the data lies beneath
+    median is when quantile = 0.5
+    """
+    index = int(p * len(x))
+    return sorted(x)[index]
+    
+def mode(x):
+    counts = Counter(x)
+    maxCount = max(counts.values())
+    return [x_i for x_i, count in counts.itertimes() if count == max_count]
+    
+def data_range(x):
+    return max(x) - min(x)
+    
+def difference_from_mean(x):
+    avgValue = mean(x)
+    return [x_i - avgValue for x_i in x]
+
+def variance(x):
+    n = len(x)
+    deviations = difference_from_mean(x)
+    return sum_of_squares(deviations)/(n-1) #recall that sum_of_squares was defined in vectorTools
+    
+def standard_deviation(x):
+    math.sqrt(variance(x))
+    
+def interquartile_range(x):
+    """
+    This helps us deal with the problems of outliers, which can effect things like the stdev.
+    the interquartile range tells us the difference between the 75th and 25th precentile
+    """
+    return quantile(x, 0.75) - quantile(x, 0.25)
+    
+def covarience(x, y):
+    """
+    Covarience is roughly how two variables vary in tandem from their means
+    it's kinda like the multivariable version of variance
+    if we have a large, positive covariance, then when x is big/small, y is big/small
+    negative covariance implies the opposite
+    but we don't really have a good way to quanitfy "large covariance"
+    """
+    n = len(x)
+    return dot_product(x, y)/(n -1)
+    
+def correlation(x, y)
+    """
+    This is a measure of relatedness, and is more intelligable because we divide out by stdev
+    -1 implies perfect anticorrelation, 1 implies perfect correlation, 0 implies none
+    """
+    xStdev = standard_deviation(x)
+    yStdev = standard_devation(y)
+    if xStdev > 0 and yStdev > 0:
+        return covariance(x, y)/(xStdev * yStdev)
+    else:
+        return 0
+
+#one thing that the chapter addresses is confounding varibles, where trends might be hidden in subcategories
+#ie, you can break groups down many different ways and get opposite results
+
+#It's often hard to gauge correlation and causation (ie, # of friends with time online), which can be determined experimentally
+#but this raises some ethical problems when users are manipulated
