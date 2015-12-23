@@ -18,3 +18,9 @@ def get_col(A, j):
   """
   return [A_i[j] for A_i in A]
 
+def make_matrix(num_rows, num_cols, entry_fn):
+  """
+  Makes a num_rows by num_cols matrix using entry_fn, a function which assigns a value based on the element position
+  """
+  return [[entry_fn(i, j) for j in range(num_cols)] for i in range(num_rows)]
+  
