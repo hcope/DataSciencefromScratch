@@ -1,0 +1,55 @@
+#chapter 6 is about probability, yay doing 6.01 again >_>
+import math
+import random
+
+#probability density function (pdf): probability of seeing a value in an interval = integral of function over interval
+def uniform_pdf(x):
+    return 1 if x>=0 and x < 1 else 0
+
+#cumulative distribution function (cdf): probability a random variable is less than or equal to a certain value
+def uniform_cdf(x):
+    if x < 0:
+        return 0
+    elif x < 1:
+        return x
+    else:
+        return 1
+
+def normal_pdf(x, mu=0, sigma=1):
+    """
+    This is determined by the distribution function
+    """
+    sqrtTwoPi = math.sqrt(2 * math.pi)
+    return math.exp(-(x - mu)**2 / (2 * sigma**2))/(sqrtTwoPi * sigma)
+
+def normal_cdf(x, mu=0, sigma=1):
+    """
+    note that this can't be written as an elementary function. hence the erf
+    """
+    return (1 + math/erf((x - mu)/ (math.sqrt(2) * sigma) ))/2
+
+#inverting this function is hard, so we need to do a binary search
+def inverse_normal_cdf(p, mu=0, sigma=1, tolerance=0.00001):
+    if mu != 0 or sigma != 1:
+        return mu + sigma * inverse_normal_cdf(p, tolerance=tolerance)
+    lowZ, lowP = -10.0, 0.0
+    hiZ, hiP = 10.0, 1
+    while hiZ - lowZ > tolerance:
+        midZ = (lowZ + hiZ)/2
+        midP = normal_cdf(midZ)
+        if midP < p:
+            lowZ, lowP = midZ, midP
+        elif midP > p:
+            hiZ, hiP = midZ, midP
+        else:
+            break
+    return midZ
+
+#central limit thm: random var defined as avg of large num of independent/identically distributed vars are approx normally dist
+
+def bernoulli_trial(p):
+    return 1 if random.random() < p else 0
+
+def binomial(n, p):
+    return sum(bernoulli_trial(p) for _ in range(n))
+
