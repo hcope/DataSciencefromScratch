@@ -1,0 +1,60 @@
+#Chapter 8: Gradient Descent
+
+def difference_quotient(f, x, h):
+  """
+  The limit of this function, as h approaches 0, is the derivative of the function
+  """
+  return (f(x+h) - f(x))/h
+  
+def partial_difference_quotient(f, v, i, h):
+    """
+    For multi-variable functions. Calculates how f changes wrt changes of a specific variable.
+    Computes the ith partial difference by having v be the original set of variables,
+    and w being the variables with only the ith element changed (by adding h) 
+    """
+    w = [v_j + (h if j ==i else 0) for j, v_ in enumerate(v)]
+    return (f(w) - f(v))/h
+  
+def estimate_gradient(f, v, h=0.0001):
+    """
+    uses the partial difference in order to estimate the gradient
+    """
+    return [partial_difference_guotient(f, v, i, h) for i, _ in enumerate(v)]
+
+def safe(f):
+    """
+    Outputs a 'safe' function, meaning that it takes in a function f, and returns a new function that returns inf
+    instead of an error, like if we were to accidentally div by 0.
+    """
+    def safe_f(*args, **kwargs):
+        try:
+            return f(*args, **kwargs)
+    except:
+            return float('inf')
+  return safe_f
+ 
+def step(v, direction, step_size):
+    """
+    MOve one step of the specificed size in the firestion from v
+    """
+    return [v_i + step_size * direction_i for v_i, direction_i in zip(v, direction)]
+
+def minimize(target_fn, gradientfn, theta_0, toldrance = 0.000001):
+    """
+    We have a function and its gradient. We wan to minimize the function. 
+    """
+    step_sizes = [100, 10, 1,0.1, 0.01, 0.001, 0.0001, 0.00001]
+    theta = theta_0
+    targetFunction = safe(target_fn)
+    value = target_fn(theta)
+    
+    while True:
+        gradient = gradient_fn(theta)
+        next_thetas = [step(theta, gradient, -step_size), for step_size in step_sizes]
+        next_theta = min(next_thetas, key=target_fn)
+        next_value = target_fn(next_theta)
+        
+        if abs(value - next_value) < tolerance:
+            return theta
+        else:
+            theta, value = next_theta, next_value
